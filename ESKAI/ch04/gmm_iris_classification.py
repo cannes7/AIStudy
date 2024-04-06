@@ -2,29 +2,27 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import patches
 from sklearn import datasets
-from sklearn.mixture import GMM
-from sklearn.cross_validation import StratifiedKFold
+from sklearn.mixture import GaussianMixture
+from sklearn.model_selection import StratifiedKFold
 
 # 붓꽃 데이터셋 로드
 iris = datasets.load_iris()
 
 # 데이터를 학습과 테스트로 나누기 (80/20 비율)
-indices = StratifiedKFold(iris.target, n_folds=5)
-train_index, test_index = next(iter(indices))
+indices = StratifiedKFold(n_splits=5)
+train_index, test_index = next(indices.split(iris.data, iris.target))
 
 # 학습 데이터와 레이블 추출
-X_train = iris.data[train_index]
-y_train = iris.target[train_index]
+X_train, y_train = iris.data[train_index], iris.target[train_index]
 
 # 테스트 데이터와 레이블 추출
-X_test = iris.data[test_index]
-y_test = iris.target[test_index]
+X_test, y_test = iris.data[test_index], iris.target[test_index]
 
 # 클래스의 수 추출
 num_classes = len(np.unique(y_train))
 
 # GMM 모델 생성
-classifier = GMM(n_components=num_classes, covariance_type='full', init_params='wc', n_iter=20)
+classifier = GaussianMixture(n_components=num_classes, covariance_type='full', init_params='wc', n_iter=20)
 
 # GMM 모델의 평균 초기화
 classifier.means_ = np.array([X_train[y_train == i].mean(axis=0) for i in range(num_classes)])
@@ -37,7 +35,7 @@ plt.figure()
 colors = 'bgr'
 for i, color in enumerate(colors):
     # 고유값과 고유벡터 추출
-    eigenvalues, eigenvectors = np.linalg.eigh(classifier._get_covars()[i][:2, :2])
+    eigenvalues, eigenvectors = np.linalg.eigh(classifier.covariances_[i][:2, :2])
 
     # 첫 번째 고유벡터를 정규화
     norm_vec = eigenvectors[0] / np.linalg.norm(eigenvectors[0])
