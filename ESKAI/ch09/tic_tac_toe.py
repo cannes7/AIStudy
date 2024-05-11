@@ -12,7 +12,7 @@ class GameController(TwoPlayersGame):
         # Define who starts the game
         self.nplayer = 1
 
-        # Define the board
+        # Define the board - 3x3 board in this example
         self.board = [0] * 9
 
     # Define possible moves
@@ -47,7 +47,7 @@ class GameController(TwoPlayersGame):
 
 
 if __name__ == "__main__":
-    # Define the algorithm
+    # Define the algorithm - depth of tree = 7 in this example
     algorithm = Negamax(7)
 
     # Start the game

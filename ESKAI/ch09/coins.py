@@ -18,8 +18,7 @@ class LastCoinStanding(TwoPlayersGame):
         # Define max number of coins per move
         self.max_coins = 4
 
-        # Define possible moves
-
+    # Define possible moves. 1 to 4 coins in the example
     def possible_moves(self):
         return [str(x) for x in range(1, self.max_coins + 1)]
 
@@ -27,18 +26,15 @@ class LastCoinStanding(TwoPlayersGame):
     def make_move(self, move):
         self.num_coins -= int(move)
 
-        # Did the opponent take the last coin?
-
+    # Did the opponent or I take the last coin?
     def win(self):
         return self.num_coins <= 0
 
-        # Stop the game when somebody wins
-
+     # Stop the game when somebody wins
     def is_over(self):
         return self.win()
 
-        # Compute score
-
+    # Compute score
     def scoring(self):
         return 100 if self.win() else 0
 
@@ -48,10 +44,10 @@ class LastCoinStanding(TwoPlayersGame):
 
 
 if __name__ == "__main__":
-    # Define the transposition table
+    # Define the transposition(전치) table, saving the location and movement
     tt = TT()
 
-    # Define the method
+    # Define the method returning the # of coins remaining
     LastCoinStanding.ttentry = lambda self: self.num_coins
 
     # Solve the game
